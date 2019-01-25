@@ -25,23 +25,55 @@ program carrmagi;
 uses crt;
 
 CONST TAILLECARRE=5;
-VAR i,j,k :integer;
-carremagique: array[1..TAILLECARRE,1..TAILLECARRE] of integer;
+TYPE TABLECARRE = array[1..TAILLECARRE,1..TAILLECARRE] of integer;
 
 
+//Procedure d'ecriture.
+
+procedure ecrire(T:TABLECARRE);
+VAR i,j:integer;
 BEGIN
-	clrscr;
 	FOR i:=1 to TAILLECARRE DO
 	BEGIN
 		FOR j:=1 to TAILLECARRE DO
 		BEGIN
-			carremagique[i,j]:=0;
+			IF T[i,j]<10 THEN
+				write(' ',T[i,j],' ')
+			ELSE
+				write(' ',T[i,j]);
+		END;
+		writeln;
+	END;
+END;
+
+//Fonction d'initialisation.
+
+function initialisation():TABLECARRE;
+VAR i,j:integer
+	T:TABLECARRE;
+BEGIN
+	FOR i:=1 to TAILLECARRE DO
+	BEGIN
+		FOR j:=1 to TAILLECARRE DO
+		BEGIN
+			T[i,j]:=0;
 		END;
 	END;
+	initialisation:=T;
+END;
+
+
+//Fonction de remplissage.
+
+function remplissage (T:TABLECARRE):TABLECARRE;
+var i,j,k:integer;
+	tablerempli : TABLECARRE;
+BEGIN
+	tablerempli:=initialisation();
+
 	i:=(TAILLECARRE DIV 2);
 	j:=(TAILLECARRE DIV 2 +1);
-	carremagique[i,j]:=1;
-
+	tablerempli[i,j]:=1;
 	FOR k:=1 TO (TAILLECARRE*TAILLECARRE)-1 DO
 	BEGIN
 		i:=i-1;
@@ -50,10 +82,8 @@ BEGIN
 			j:=1;
 		IF i=0 THEN
 			i:=TAILLECARRE;
-		write ('i=',i);
-		write ('j=',j);
 
-		WHILE Carremagique[i,j]<>0 DO
+		WHILE tablerempli[i,j]<>0 DO
 		BEGIN
 			i:=i-1;
 			j:=j-1;
@@ -62,21 +92,23 @@ BEGIN
 			IF i=0 THEN
 				i:=TAILLECARRE;
 		END;
-
-		Carremagique[i,j]:=k+1;
-		
+		tablerempli[i,j]:=k+1;
 	END;
+	remplissage:=tablerempli;
+END;
 
-	FOR i:=1 to TAILLECARRE DO
-	BEGIN
-		FOR j:=1 to TAILLECARRE DO
-		BEGIN
-			IF Carremagique[i,j]<10 THEN
-				write(' ',Carremagique[i,j]);
-			ELSE
-				write(Carremagique[i,j]);
-		END;
-		writeln;
-	END;
+//Début du Programme
+VAR carremagique: TABLECARRE;
+i,j:integer;
+
+BEGIN
+	clrscr;
+
+	carremagique:=initialisation;
+
+	carremagique:=remplissage(carremagique);
+
+	ecrire(carremagique);
+	
 	readln;
 END.
